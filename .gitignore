@@ -1,0 +1,36 @@
+# Ignore Notes folder
+Notes/
+
+# Ignore all executable files
+*.exe
+*.out
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore compilation related files
+*.o
+*.obj
+tempCodeRunnerFile.*
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE specific files
+*.suo
+*.user
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# Ignore any backup files
+*~
+*.bak
+
+# Keep only source code files
+!*.cpp
+!*.h
+!*.pl
+!README.md
+!.gitignore
