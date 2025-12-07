@@ -1,98 +1,47 @@
 #include <iostream>
-#include <vector>
-#include <map>
 using namespace std;
 
-// CSP Implementation for Map Coloring Problem
-class MapColoringCSP
-{
-private:
-    map<string, vector<string>> graph; // adjacency list
-    map<string, string> colors;        // assigned colors
-    vector<string> colorOptions;       // available colors
-
-public:
-    MapColoringCSP()
-    {
-        colorOptions = {"Red", "Green", "Blue"};
-    }
-
-    void addRegion(string region, vector<string> neighbors)
-    {
-        graph[region] = neighbors;
-    }
-
-    bool isColorValid(string region, string color)
-    {
-        for (const string &neighbor : graph[region])
-        {
-            if (colors.count(neighbor) && colors[neighbor] == color)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool solveCSP(vector<string> &regions, int index)
-    {
-        if (index == regions.size())
-        {
-            return true;
-        }
-
-        string currentRegion = regions[index];
-
-        for (const string &color : colorOptions)
-        {
-            if (isColorValid(currentRegion, color))
-            {
-                colors[currentRegion] = color;
-
-                if (solveCSP(regions, index + 1))
-                {
-                    return true;
-                }
-
-                colors.erase(currentRegion);
-            }
-        }
-
-        return false;
-    }
-
-    void printSolution()
-    {
-        for (const auto &pair : colors)
-        {
-            cout << pair.first << " -> " << pair.second << endl;
-        }
-    }
+const int N = 4;      // 4 regions
+int g[N][N] = {      // Adjacency matrix
+    {0,1,1,0},
+    {1,0,1,1},
+    {1,1,0,1},
+    {0,1,1,0}
 };
 
-int main()
-{
-    MapColoringCSP csp;
+int color[N];        // color of each region
+int C = 3;           // number of colors
 
-    // Adding regions and their neighbors
-    csp.addRegion("WA", {"NT", "SA"});
-    csp.addRegion("NT", {"WA", "SA", "QLD"});
-    csp.addRegion("SA", {"WA", "NT", "QLD", "NSW", "VIC"});
-    csp.addRegion("QLD", {"NT", "SA", "NSW"});
-    csp.addRegion("NSW", {"QLD", "SA", "VIC"});
-    csp.addRegion("VIC", {"SA", "NSW"});
+bool safe(int v, int c) {
+    for(int i=0;i<N;i++)
+        if(g[v][i] && color[i]==c)
+            return false;
+    return true;
+}
 
-    vector<string> regions = {"WA", "NT", "SA", "QLD", "NSW", "VIC"};
+bool solve(int v) {
+    if(v==N) return true;
 
-    cout << "Map Coloring Solution:\n";
-    if (csp.solveCSP(regions, 0))
-    {
-        csp.printSolution();
+    for(int c=1;c<=C;c++){
+        if(safe(v,c)){
+            color[v]=c;
+            if(solve(v+1)) return true;
+            color[v]=0;   // backtrack
+        }
+    }
+    return false;
+}
+
+int main() {
+    for(int i=0;i<N;i++) color[i]=0;
+
+    if(solve(0)){
+        cout<<"Graph Coloring Solution:\n";
+        for(int i=0;i<N;i++)
+            cout<<"Region "<<i<<" -> Color "<<color[i]<<endl;
     }
     else
-    {
-        cout << "No solution exists.\n";
-    }
+        cout<<"No solution";
 
     return 0;
 }

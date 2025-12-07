@@ -1,60 +1,56 @@
 #include <iostream>
+#include <queue>
 using namespace std;
 
-const int MAX = 5;
-int graph[MAX][MAX] = {
-    {0, 1, 0, 1, 0},
-    {1, 0, 1, 0, 1},
-    {0, 1, 0, 0, 0},
-    {1, 0, 0, 0, 1},
-    {0, 1, 0, 1, 0}};
+const int V = 5;
 
-bool visited[MAX];
+int g[V][V] = {
+    {0,1,1,0,0},  
+    {1,0,0,1,0},  
+    {1,0,0,1,1},  
+    {0,1,1,0,1},  
+    {0,0,1,1,0}   
+};
 
-void dfs(int node)
-{
-    cout << node << " ";
-    visited[node] = true;
-    for (int i = 0; i < MAX; i++)
-    {
-        if (graph[node][i] == 1 && !visited[i])
-        {
-            dfs(i);
-        }
-    }
-}
+void BFS(int start) {
+    bool visited[V] = {false};
+    queue<int> q;
 
-void bfs(int start)
-{
-    bool visited[MAX] = {false};
-    int queue[MAX], front = 0, rear = 0;
     visited[start] = true;
-    queue[rear++] = start;
+    q.push(start);
 
-    while (front < rear)
-    {
-        int node = queue[front++];
-        cout << node << " ";
-        for (int i = 0; i < MAX; i++)
-        {
-            if (graph[node][i] == 1 && !visited[i])
-            {
-                visited[i] = true;
-                queue[rear++] = i;
+    cout << "BFS: ";
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        cout << u << " ";
+
+        for (int v = 0; v < V; v++) {
+            if (g[u][v] == 1 && !visited[v]) {
+                visited[v] = true;
+                q.push(v);
             }
         }
     }
+    cout << endl;
 }
 
-int main()
-{
-    for (int i = 0; i < MAX; i++)
-        visited[i] = false;
-    cout << "DFS starting from node 0: ";
-    dfs(0);
+void DFS(int u, bool visited[]) {
+    visited[u] = true;
+    cout << u << " ";
 
-    cout << "\nBFS starting from node 0: ";
-    bfs(0);
+    for (int v = 0; v < V; v++) {
+        if (g[u][v] == 1 && !visited[v]) {
+            DFS(v, visited);
+        }
+    }
+}
+
+int main() {
+    bool visited[V] = {false};
+    cout<<"Traversing city graph\n";
+    BFS(0);            
+    cout << "DFS: ";
+    DFS(0, visited);   
 
     return 0;
 }

@@ -1,87 +1,75 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
-const int N = 5;
+const int N = 4;
 
-struct Node {
-    int x, y, g, f;
+// Graph (cost between nodes)
+int g[N][N] = {
+    {0, 1, 4, 0},   // 0
+    {1, 0, 2, 5},   // 1
+    {4, 2, 0, 1},   // 2
+    {0, 5, 1, 0}    // 3
 };
 
-int heuristic(int x, int y, int gx, int gy) {
-    return abs(x - gx) + abs(y - gy);
-}
+// Heuristic values to goal (node 3)
+int h[N] = {7, 6, 2, 0};
 
-void aStar(int sx, int sy, int gx, int gy) {
-    bool visited[N][N] = {false};
-    Node openList[100];
-    int openSize = 0;
-    int parentX[N][N], parentY[N][N];
+int main() {
+    bool open[N] = {false};
+    bool closed[N] = {false};
+    int gCost[N], parent[N];
 
-    openList[openSize++] = {sx, sy, 0, heuristic(sx, sy, gx, gy)};
-    visited[sx][sy] = true;
-    parentX[sx][sy] = -1;
-    parentY[sx][sy] = -1;
+    for(int i=0;i<N;i++){
+        gCost[i] = 999;
+        parent[i] = -1;
+    }
 
-    while(openSize > 0) {
-        int bestIndex = 0;
-        int bestF = openList[0].f;
-        for(int i=1; i<openSize; i++) {
-            if(openList[i].f < bestF) {
-                bestF = openList[i].f;
-                bestIndex = i;
+    int start = 0, goal = 3;
+    gCost[start] = 0;
+    open[start] = true;
+
+    while(true){
+        int current = -1, bestF = 999;
+
+        // pick node with lowest f = g + h
+        for(int i=0;i<N;i++){
+            if(open[i] && gCost[i] + h[i] < bestF){
+                bestF = gCost[i] + h[i];
+                current = i;
             }
         }
 
-        Node current = openList[bestIndex];
+        if(current == -1) break;
+        if(current == goal) break;
 
-        for(int i=bestIndex; i<openSize-1; i++)
-            openList[i] = openList[i+1];
-        openSize--;
+        open[current] = false;
+        closed[current] = true;
 
-        if(current.x == gx && current.y == gy) {
-            cout << "Goal reached!\nPath: ";
-            int pathX[100], pathY[100], idx = 0;
-            int cx = gx, cy = gy;
-            while(cx != -1 && cy != -1) {
-                pathX[idx] = cx;
-                pathY[idx] = cy;
-                int px = parentX[cx][cy];
-                int py = parentY[cx][cy];
-                cx = px;
-                cy = py;
-                idx++;
-            }
-            for(int i=idx-1; i>=0; i--)
-                cout << "(" << pathX[i] << "," << pathY[i] << ") ";
-            cout << endl;
-            return;
-        }
-
-        visited[current.x][current.y] = true;
-
-        int dx[4] = {1, -1, 0, 0};
-        int dy[4] = {0, 0, 1, -1};
-
-        for(int i=0; i<4; i++) {
-            int nx = current.x + dx[i];
-            int ny = current.y + dy[i];
-            if(nx>=0 && ny>=0 && nx<N && ny<N && !visited[nx][ny]) {
-                int g = current.g + 1;
-                int h = heuristic(nx, ny, gx, gy);
-                int f = g + h;
-                openList[openSize++] = {nx, ny, g, f};
-                visited[nx][ny] = true;
-                parentX[nx][ny] = current.x;
-                parentY[nx][ny] = current.y;
+        for(int v=0; v<N; v++){
+            if(g[current][v] > 0 && !closed[v]){
+                int newCost = gCost[current] + g[current][v];
+                if(newCost < gCost[v]){
+                    gCost[v] = newCost;
+                    parent[v] = current;
+                    open[v] = true;
+                }
             }
         }
     }
 
-    cout << "No path found!\n";
-}
+    // Print Path
+    cout<<"Shortest path finding in road network\n";
+    cout << "A* Path: ";
+    int path[N], cnt = 0;
+    int node = goal;
+    while(node != -1){
+        path[cnt++] = node;
+        node = parent[node];
+    }
 
-int main() {
-    aStar(0, 0, 4, 4);
+    for(int i = cnt-1; i >= 0; i--)
+        cout << path[i] << " ";
+
+    cout << "\nTotal Cost = " << gCost[goal];
     return 0;
 }
