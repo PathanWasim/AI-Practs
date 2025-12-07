@@ -1,29 +1,26 @@
-% Facts about relationships
-parent(john, bob).
-parent(john, lisa).
-parent(mary, bob).
-parent(mary, lisa).
-parent(bob, ann).
-parent(bob, mike).
-parent(lisa, carol).
+% Facts
+parent(ram, shyam).
+parent(seeta, shyam).
+parent(ram, sita).
+parent(seeta, sita).
+
+male(ram).
+male(shyam).
+female(seeta).
+female(sita).
 
 % Rules
 father(X, Y) :- parent(X, Y), male(X).
 mother(X, Y) :- parent(X, Y), female(X).
-grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
-sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
 
-% Facts about gender
-male(john).
-male(bob).
-male(mike).
-female(mary).
-female(lisa).
-female(ann).
-female(carol).
+sibling(X, Y) :-
+    parent(P, X),
+    parent(P, Y),
+    X \= Y.
 
-% Queries examples:
-% ?- father(john, bob).
-% ?- mother(mary, lisa).
-% ?- grandparent(john, ann).
-% ?- sibling(ann, mike).
+
+%run
+father(ram, shyam).
+mother(seeta, sita).
+father(X, shyam).
+sibling(X, sita).
