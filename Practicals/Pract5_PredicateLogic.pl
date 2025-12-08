@@ -18,9 +18,15 @@ sibling(X, Y) :-
     parent(P, Y),
     X \= Y.
 
+% Grandfather Rule
+grandfather(X, Y) :-
+    parent(X, Z),
+    parent(Z, Y),
+    male(X).
 
-%run
+% Run / Queries
 father(ram, shyam).
 mother(seeta, sita).
 father(X, shyam).
 sibling(X, sita).
+grandfather(X, sita).
