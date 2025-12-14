@@ -1,4 +1,4 @@
-// Pract3_AOStar_Simple.cpp
+
 #include <iostream>
 using namespace std;
 
