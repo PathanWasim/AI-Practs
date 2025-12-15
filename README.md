@@ -62,11 +62,3 @@ This repository contains implementations of various Artificial Intelligence algo
 ## Requirements
 - C++ Compiler (C++11 or later)
 - SWI-Prolog for running Prolog programs
-
-## Contributing
-Feel free to contribute to this repository by:
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
