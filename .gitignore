@@ -17,7 +17,7 @@ tempCodeRunnerFile.*
 .DS_Store
 Thumbs.db
 
-# Ignore IDE specific files
+# Ignore IDE specific 
 *.suo
 *.user
 *.sln
